@@ -2,12 +2,25 @@ const { open } = require('node:fs/promises');
 
 (async () => {
     const file = await open('input.txt');
-    let elves = []
     let calories = 0
+    let max1 = 0
+    let max2 = 0
+    let max3 = 0
 
     for await (const line of file.readLines()) {
         if (line === '') {
-            elves.push(calories)
+            if(calories > max1){
+                max3 = max2
+                max2 = max1
+                max1 = calories
+            }
+            else if(calories > max2) {
+                max3 = max2
+                max2 = calories
+            }
+            else if(calories > max3) {
+                max3 = calories
+            }
             calories = 0
         }
         else {
@@ -15,11 +28,6 @@ const { open } = require('node:fs/promises');
         }
     }
 
-    //Part 1
-    elves.sort((a, b) => a > b ? -1 : 1)
-    console.log("Part 1", elves[0])
-
-    //Part 2
-    let top3 = elves[0] + elves[1] + elves[2]
-    console.log("Part 2", top3)
+    console.log("Part 1: ", max1)
+    console.log("Part 2: ", max1 + max2 + max3)
 })();
